@@ -60,9 +60,12 @@ async def retrieve_file(file: DataOfFile):
     )
     filepath = await storage.retrieve()
     if filepath is None:
-        return {
-            "message": "file not found."
-        }
+        return responses.JSONResponse(
+            content={
+                "message": "file not found."
+            },
+            status_code=404
+        )
     return responses.FileResponse(
         path=filepath, filename=filename
     )
