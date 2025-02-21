@@ -2,10 +2,16 @@ from fastapi import FastAPI, File, UploadFile, responses
 from pydantic import BaseModel
 
 from storage import Storage
-app = FastAPI()
+from rabbitmq import MQAsyncClient
 
 class DataOfFile(BaseModel):
     filename: str
+
+BROKER_QUEUE_NAME = "queue"
+
+app = FastAPI(
+    on_startup=[MQAsyncClient(BROKER_QUEUE_NAME).consumer]
+)
 
 @app.post("/upload/")
 async def upload_file(file: UploadFile = File(...)):
