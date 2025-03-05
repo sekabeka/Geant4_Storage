@@ -9,8 +9,6 @@ from abc import ABC, abstractmethod
 from aio_pika.message import AbstractIncomingMessage, Message
 from pika.exceptions import AMQPError
 
-logger.add("logs/rabbitmq.log", level="INFO", rotation="5 MB")
-
 class MQClient(ABC):
     def __init__(self, queue, url=None, exchange="", exchange_type=""):
         self.exchange = exchange
@@ -205,4 +203,3 @@ class MQSyncClient(MQClient):
 
     def close(self):
         self.connection.close()
-
