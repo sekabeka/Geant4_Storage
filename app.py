@@ -2,16 +2,16 @@ from fastapi import FastAPI, File, UploadFile, responses
 from pydantic import BaseModel
 
 from storage import Storage
-from rabbitmq import MQAsyncClient
+
 
 class DataOfFile(BaseModel):
     filename: str
 
+
 BROKER_QUEUE_NAME = "queue"
 
-app = FastAPI(
-    on_startup=[MQAsyncClient(BROKER_QUEUE_NAME).consumer]
-)
+app = FastAPI()
+
 
 @app.post("/upload/")
 async def upload_file(file: UploadFile = File(...)):
@@ -28,6 +28,7 @@ async def upload_file(file: UploadFile = File(...)):
         "message": "file already exists.",
     }
 
+
 @app.post("/update/")
 async def update_file(file: UploadFile = File(...)):
     storage = Storage(
@@ -43,6 +44,7 @@ async def update_file(file: UploadFile = File(...)):
         "message": "file not found.",
     }
 
+
 @app.post("/remove/")
 async def remove_file(file: DataOfFile):
     filename = file.filename
@@ -57,6 +59,7 @@ async def remove_file(file: DataOfFile):
     return {
         "message": "file not found or other reasons."
     }
+
 
 @app.post("/retrieve/")
 async def retrieve_file(file: DataOfFile):
@@ -75,5 +78,3 @@ async def retrieve_file(file: DataOfFile):
     return responses.FileResponse(
         path=filepath, filename=filename
     )
-
-    

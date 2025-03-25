@@ -5,6 +5,7 @@ PATH_TO_STORAGE = "storage/"
 if not os.path.exists(PATH_TO_STORAGE):
     os.mkdir(PATH_TO_STORAGE)
 
+
 class Storage:
     def __init__(
             self,
@@ -38,9 +39,3 @@ class Storage:
 
     def exists(self):
         return os.path.exists(self.filepath)
-
-
-
-
-
-
